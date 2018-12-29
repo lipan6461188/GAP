@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>README</title>
+<title>Introduction</title>
 
 
 <style type="text/css">
@@ -513,7 +513,7 @@ pre.line-numbers > code {
 
 <h1 id="toc_0">GAP</h1>
 
-<p><b>G</b>FF <b>A</b>nnotation <b>P</b>aser (GAP) is a tool for parsing Gencode/Ensembl GTF and NCBI GFF3 genome annotation files.</p>
+<p><b>G</b>FF <b>A</b>nnotation <b>P</b>aser (<a href="https://github.com/lipan6461188/GAP" style="text-decoration:none;color:blue;">GAP</a>) is a tool for parsing Gencode/Ensembl GTF and NCBI GFF3 genome annotation files.</p>
 
 <h2 id="toc_1">Installation</h2>
 
@@ -535,26 +535,26 @@ export PATH=[GAP]:$PATH</code></pre></div>
 <ul>
 <li>Fetch transcritome file from genome with GFF/GTF annotation;</li>
 <li>Conversion between three coordinate systems: Gene/Transcript/Genome;</li>
-<li>Get transcription information (chrID, gene type, length, CDS region&hellip;) given a transcription ID or gene names;</li>
+<li>Get transcription information (chrID, gene type, length, CDS region&hellip;) given a transcription ID or gene name;</li>
 <li>Show mRNA structure</li>
 <li>&hellip;</li>
 </ul>
 
-<h2 id="toc_5">Data source</h2>
+<h2 id="toc_5">Download data</h2>
 
 <blockquote>
 <p>Gencode GTF/Genome: <a href="https://www.gencodegenes.org">https://www.gencodegenes.org</a> <br>
-Enesembl GTF/Genome: <a href="https://asia.ensembl.org/info/data/ftp/index.html">https://asia.ensembl.org/info/data/ftp/index.html</a> <br>
+Enesembl GTF/Genome: <a href="https://ensembl.org/info/data/ftp/index.html">https://ensembl.org/info/data/ftp/index.html</a> <br>
 NCBI GFF3/Genome: <a href="ftp://ftp.ncbi.nlm.nih.gov/genomes">ftp://ftp.ncbi.nlm.nih.gov/genomes</a></p>
 </blockquote>
 
 <h2 id="toc_6">Quick start</h2>
 
-<h4 id="toc_7">1. Convert an GTF file to *.genomeCoor.bed file</h4>
+<h4 id="toc_7">1. Convert a GTF file to *.genomeCoor.bed file</h4>
 
 <div><pre class="line-numbers"><code class="language-shell">parseGTF.py -g chicken.gtf -o chicken -s ensembl --genome chicken_ensembl.fa</code></pre></div>
 
-<p>The genome file <code>chicken_ensembl.fa</code> is optional.</p>
+<p>The genome file <code>--genome chicken_ensembl.fa</code> is optional.</p>
 
 <p>It will produce three files: </p>
 
@@ -618,9 +618,9 @@ CDS = GAPDH[cds_start-1:cds_end]
 UTR_3 = GAPDH[cds_end:]
 
 ## Method 2
-print chicken_parser.show_mRNA_structure(&quot;ENSGALT00000054080&quot;)</code></pre></div>
+print chicken_parser.showRNAStructure(&quot;ENSGALT00000054080&quot;)</code></pre></div>
 
-<p><img src="img/show_mRNA_structure.png"></p>
+<p><img src="img/showRNAStructure.png"></p>
 
 <h4 id="toc_12">6. Get genome coordination of GAPDH start codon</h4>
 
@@ -645,9 +645,9 @@ while 1:
 
 ## Label
 for loc in locs:
-    print str(loc)+&quot;\t&quot;+chicken_parser.label_RNA_position(&quot;ENSGALT00000054080&quot;, [loc,loc])</code></pre></div>
+    print str(loc)+&quot;\t&quot;+chicken_parser.labelRNAPosition(&quot;ENSGALT00000054080&quot;, [loc,loc])</code></pre></div>
 
-<p><img src="img/label_RNA_position.png"></p>
+<p><img src="img/labelRNAPosition.png"></p>
 
 <style>
 .hov:hover {
@@ -704,19 +704,21 @@ chicken_parser = GAP.init(&quot;chicken.genomeCoor.bed&quot;, &quot;chicken_tran
 chicken_parser = GAP.initGTF(&quot;chicken.gtf&quot;, genomeFile=&quot;chicken_ensembl.fa&quot;, source=&#39;Ensembl&#39;)</code></pre></div>
 
 <div class="clearfix">
-<a class="hov" style="" src="#">GAP.init</a>
-<a class="hov" src="#">GAP.initGTF</a>
-<a class="hov" src="#">addSeq</a>
+<a class="hov" href="#parseGTF">parseGTF.py</a>
+<a class="hov" href="#combineNCBIGenome">combineNCBIGenome.py</a>
+<a class="hov" href="#GAPinit">GAP.init</a>
+<a class="hov" href="#GAPinitGTF">GAP.initGTF</a>
+<a class="hov" href="#addSeq">addSeq</a>
 </div>
 
 <h3 id="toc_18">Get transcript or gene information</h3>
 
 <div class="clearfix">
-<a class="hov" style="" src="#">getTransFeature</a>
-<a class="hov" src="#">getGeneParser</a>
-<a class="hov" style="" src="#">getGeneIntron</a>
-<a class="hov" src="#">getGeneExon</a>
-<a class="hov" src="#">getGeneCombinedIntronExon</a>
+<a class="hov" href="#getTransFeature">getTransFeature</a>
+<a class="hov" href="#getGeneParser">getGeneParser</a>
+<a class="hov" href="#getGeneIntron">getGeneIntron</a>
+<a class="hov" href="#getGeneExon">getGeneExon</a>
+<a class="hov" href="#getGeneCombinedIntronExon">getGeneCombinedIntronExon</a>
 </div>
 
 <h3 id="toc_19">Coordinate transformation</h3>
@@ -726,48 +728,96 @@ chicken_parser = GAP.initGTF(&quot;chicken.gtf&quot;, genomeFile=&quot;chicken_e
 <p><img src="img/coordinate_system2.png"></p>
 
 <div class="clearfix">
-<a class="hov" style="" src="#">geneCoor2genomeCoor</a>
-<a class="hov" src="#">genomeCoor2geneCoor</a>
-<a class="hov" style="" src="#">genomeCoor2transCoor</a>
-<a class="hov" src="#">transCoor2genomeCoor</a>
-<a class="hov" style="" src="#">transCoor2geneCoor</a>
-<a class="hov" src="#">geneCoor2transCoor</a>
+<a class="hov" href="#geneCoor2genomeCoor">geneCoor2genomeCoor</a>
+<a class="hov" href="#genomeCoor2geneCoor">genomeCoor2geneCoor</a>
+<a class="hov" href="#genomeCoor2transCoor">genomeCoor2transCoor</a>
+<a class="hov" href="#transCoor2genomeCoor">transCoor2genomeCoor</a>
+<a class="hov" href="#transCoor2geneCoor">transCoor2geneCoor</a>
+<a class="hov" href="#geneCoor2transCoor">geneCoor2transCoor</a>
 </div>
 
 <h3 id="toc_20">Get transcript list or gene list</h3>
 
 <div class="clearfix">
-<a class="hov" style="" src="#">getTransList</a>
-<a class="hov" src="#">getGeneList</a>
-<a class="hov" style="" src="#">getmRNATransList</a>
-<a class="hov" src="#">getmRNAGeneList</a>
-<a class="hov" style="" src="#">getLenSortedTransDictForGenes</a>
-<a class="hov" src="#">getTransByGeneID</a>
-<a class="hov" style="" src="#">getGeneByGeneName</a>
-<a class="hov" src="#">getTransByGeneName</a>
-<a class="hov" src="#">getTransByGeneType</a>
+<a class="hov" href="#getTransList">getTransList</a>
+<a class="hov" href="#getGeneList">getGeneList</a>
+<a class="hov" href="#getmRNATransList">getmRNATransList</a>
+<a class="hov" href="#getmRNAGeneList">getmRNAGeneList</a>
+<a class="hov" href="#getLenSortedTransDictForGenes">getLenSortedTransDictForGenes</a>
+<a class="hov" href="#getTransByGeneID">getTransByGeneID</a>
+<a class="hov" href="#getGeneByGeneName">getGeneByGeneName</a>
+<a class="hov" href="#getTransByGeneName">getTransByGeneName</a>
+<a class="hov" href="#getTransByGeneType">getTransByGeneType</a>
 </div>
 
 <h3 id="toc_21">Get transcript sequence and mRNA structure</h3>
 
 <div class="clearfix">
-<a class="hov" style="" src="#">getTransSeq</a>
-<a class="hov" src="#">show_mRNA_structure</a>
-<a class="hov" src="#">label_RNA_position</a>
-<a class="hov" src="#">get_RNA_position</a>
+<a class="hov" href="#getTransSeq">getTransSeq</a>
+<a class="hov" href="#showRNAStructure">showRNAStructure</a>
+<a class="hov" href="#labelRNAPosition">labelRNAPosition</a>
+<a class="hov" href="#getRNAPosition">getRNAPosition</a>
 </div>
 
-<h2 id="toc_22">Functions</h2>
+<h2 id="toc_22">Excutable files</h2>
 
-<h4 id="toc_23"><span style="color:DarkGreen;font-family:menlo, sans-serif">GAP.init(genomeCoorBedFile, seqFn=&ldquo;&rdquo;, showAttr=True, rem_tVersion=False, rem_gVersion=False)</span></h4>
+<h4 id="parseGTF"> <span style="color:DarkGreen;font-family:menlo, sans-serif">parseGTF.py</h4>
 
-<h5 id="toc_24"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_23"><span style="color:darkred">Features</span></h5>
+
+<pre>
+Parse GTF/GFF3 file and produce *.genomeCoor.bed, *.transCoor.bed and *_transcriptome.fa files
+</pre>
+
+<h5 id="toc_24"><span style="color:darkred">Parameters</span></h5>
+
+<pre>
+-g         genome annotation, Gencode/Ensembl GTF file or NCBI GFF3
+-o         output file prefix
+-s         [ensembl|gencode|ncbi] data source
+
+optional:
+--genome   fetch transcriptome from genome file, produce a prefix_transcriptome.fa file
+</pre>
+
+<h5 id="toc_25"><span style="color:darkred">Output</span></h5>
+
+<pre>
+*.genomeCoor.bed, *.transCoor.bed and *_transcriptome.fa
+</pre>
+
+<h4 id="combineNCBIGenome"> <span style="color:DarkGreen;font-family:menlo, sans-serif">combineNCBIGenome.py</h4>
+
+<h5 id="toc_26"><span style="color:darkred">Features</span></h5>
+
+<pre>
+Combine single chromosomes download from NCBI. Convert the NC_* code to chr* code
+NC_006088.5 => chr1
+</pre>
+
+<h5 id="toc_27"><span style="color:darkred">Parameters</span></h5>
+
+<pre>
+./combineNCBIGenome.py chr1.fasta chr2.fasta chr3.fasta... > outFile.fa
+</pre>
+
+<h5 id="toc_28"><span style="color:darkred">Return</span></h5>
+
+<pre>
+A combined genome file with chr* code
+</pre>
+
+<h2 id="toc_29">Functions</h2>
+
+<h4 id="GAPinit"> <span style="color:DarkGreen;font-family:menlo, sans-serif">GAP.init(genomeCoorBedFile, seqFn=&ldquo;&rdquo;, showAttr=True, rem_tVersion=False, rem_gVersion=False)</span> </h4>
+
+<h5 id="toc_30"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Init a GAP object from *.genomeCoor.bed file
 </pre>
 
-<h5 id="toc_25"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_31"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 genomeCoorBedFile   -- A *.genomeCoor.bed file produced by parseGTF.py
@@ -777,21 +827,21 @@ rem_tVersion        -- Remove version information. ENST000000022311.2 => ENST000
 rem_gVersion        -- Remove version information. ENSG000000022311.2 => ENSG000000022311
 </pre>
 
-<h5 id="toc_26"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_32"><span style="color:darkred">Return</span></h5>
 
 <pre>
 GAP object
 </pre>
 
-<h4 id="toc_27"><span style="color:DarkGreen;font-family:menlo, sans-serif">initGTF(AnnotationGTF, source, genomeFile=&ldquo;&rdquo;, showAttr=True, rem_tVersion=False, rem_gVersion=False, verbose=False)</span></h4>
+<h4 id="GAPinitGTF"> <span style="color:DarkGreen;font-family:menlo, sans-serif">initGTF(AnnotationGTF, source, genomeFile=&ldquo;&rdquo;, showAttr=True, rem_tVersion=False, rem_gVersion=False, verbose=False)</span> </h4>
 
-<h5 id="toc_28"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_33"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Init a GAP object from GTF/GFF3 file
 </pre>
 
-<h5 id="toc_29"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_34"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 AnnotationGTF       -- Ensembl/Gencode GTF file or NCBI GFF3 file
@@ -803,42 +853,42 @@ rem_gVersion        -- Remove version information. ENSG000000022311.2 => ENSG000
 verbose             -- Show process information
 </pre>
 
-<h5 id="toc_30"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_35"><span style="color:darkred">Return</span></h5>
 
 <pre>
 GAP object
 </pre>
 
-<h4 id="toc_31"><span style="color:DarkGreen;font-family:menlo, sans-serif">addSeq(seqFileName, remove_tid_version=False)</span></h4>
+<h4 id="addSeq"> <span style="color:DarkGreen;font-family:menlo, sans-serif">addSeq(seqFileName, remove_tid_version=False)</span> </h4>
 
-<h5 id="toc_32"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_36"><span style="color:darkred">Features</span></h5>
 
 <pre>
 If the sequence is not provided when init a GAP object, add the sequence to it.
 </pre>
 
-<h5 id="toc_33"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_37"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 seqFileName         -- Transcriptome fasta file produced by parseGTF.py
 remove_tid_version  -- Remove version information. ENST000000022311.2 => ENST000000022311
 </pre>
 
-<h5 id="toc_34"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_38"><span style="color:darkred">Return</span></h5>
 
 <pre>
 No
 </pre>
 
-<h4 id="toc_35"><span style="color:DarkGreen;font-family:menlo, sans-serif">getTransFeature(transID, showAttr=False, verbose=True)</span></h4>
+<h4 id="getTransFeature"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getTransFeature(transID, showAttr=False, verbose=True)</span> </h4>
 
-<h5 id="toc_36"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_39"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Get transcript features given the transcript id
 </pre>
 
-<h5 id="toc_37"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_40"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID             -- Transcript ID
@@ -846,7 +896,7 @@ showAttr            -- Show an example
 verbose             -- Print the warning information when transcript not found
 </pre>
 
-<h5 id="toc_38"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_41"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return a dictionary:
@@ -871,21 +921,21 @@ Return a dictionary:
     exon_str        -- Genome-based exon string
 </pre>
 
-<h4 id="toc_39"><span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneParser(showAttr=True)</span></h4>
+<h4 id="getGeneParser"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneParser(showAttr=True)</span> </h4>
 
-<h5 id="toc_40"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_42"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Get gene parser with gene informations
 </pre>
 
-<h5 id="toc_41"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_43"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 showAttr            -- Show an example
 </pre>
 
-<h5 id="toc_42"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_44"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return a list of dictionaries:
@@ -903,28 +953,28 @@ Return a list of dictionaries:
         transcript  -- All transcripts belong to this gene
 </pre>
 
-<h4 id="toc_43"><span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneIntron(geneID)</span></h4>
+<h4 id="getGeneIntron"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneIntron(geneID)</span> </h4>
 
-<h5 id="toc_44"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_45"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Get genome-based intron corrdinates of given gene
 </pre>
 
-<h5 id="toc_45"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_46"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneID              -- Gene id
 </pre>
 
-<h5 id="toc_46"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_47"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Get introns of all transcripts of this gene:
             { transID => [[intron1_start, intron1_end], [intron2_start, intron2_end], [intron3_start, intron3_end]],... }
 </pre>
 
-<h4 id="toc_47"><span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneExon(geneID)</span></h4>
+<h4 id="getGeneExon"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneExon(geneID)</span> </h4>
 
 <h5 id="toc_48"><span style="color:darkred">Features</span></h5>
 
@@ -945,36 +995,36 @@ Get exons of all transcripts of this gene:
             { transID => [[exon1_start, exon1_end], [exon2_start, exon2_end], [exon3_start, exon3_end]...],... }
 </pre>
 
-<h4 id="toc_51"><span style="color:DarkGreen;font-family:menlo, sans-serif">geneCoor2genomeCoor(geneID, pos)</span></h4>
+<h4 id="geneCoor2genomeCoor"> <span style="color:DarkGreen;font-family:menlo, sans-serif">geneCoor2genomeCoor(geneID, pos)</span> </h4>
 
-<h5 id="toc_52"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_51"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Convert gene-based coordinates to genome-based coordinates
 </pre>
 
-<h5 id="toc_53"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_52"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneID              -- Gene id
 pos                 -- Gene-based position
 </pre>
 
-<h5 id="toc_54"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_53"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return: [chrID, chrPos, Strand]
 </pre>
 
-<h4 id="toc_55"><span style="color:DarkGreen;font-family:menlo, sans-serif">genomeCoor2geneCoor(chrID, start, end, strand)</span></h4>
+<h4 id="genomeCoor2geneCoor"> <span style="color:DarkGreen;font-family:menlo, sans-serif">genomeCoor2geneCoor(chrID, start, end, strand)</span> </h4>
 
-<h5 id="toc_56"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_54"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Convert genome-based coordinates to gene-based coordinates
 </pre>
 
-<h5 id="toc_57"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_55"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 chrID               -- Chromosome id
@@ -983,21 +1033,21 @@ end                 -- Chromosome-based end position
 strand              -- Chromosome strand
 </pre>
 
-<h5 id="toc_58"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_56"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return [ [chrID, chrStart, chrEnd, geneID, geneStart, geneEnd], ... ]
 </pre>
 
-<h4 id="toc_59"><span style="color:DarkGreen;font-family:menlo, sans-serif">genomeCoor2transCoor(chrID, start, end, strand)</span></h4>
+<h4 id="genomeCoor2transCoor"> <span style="color:DarkGreen;font-family:menlo, sans-serif">genomeCoor2transCoor(chrID, start, end, strand)</span> </h4>
 
-<h5 id="toc_60"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_57"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Convert genome-based coordinates to transcript-based coordinates
 </pre>
 
-<h5 id="toc_61"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_58"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 chrID               -- Chromosome id
@@ -1006,42 +1056,42 @@ end                 -- Chromosome-based end position
 strand              -- Chromosome strand
 </pre>
 
-<h5 id="toc_62"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_59"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return [ [chrID, chrStart, chrEnd, transID, transStart, transEnd], ... ]
 </pre>
 
-<h4 id="toc_63"><span style="color:DarkGreen;font-family:menlo, sans-serif">transCoor2genomeCoor(transID, pos)</span></h4>
+<h4 id="transCoor2genomeCoor"> <span style="color:DarkGreen;font-family:menlo, sans-serif">transCoor2genomeCoor(transID, pos)</span> </h4>
 
-<h5 id="toc_64"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_60"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Convert transcript-based coordinates to genome-based coordinates
 </pre>
 
-<h5 id="toc_65"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_61"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID             -- Transcript id
 pos                 -- Transcript-based position
 </pre>
 
-<h5 id="toc_66"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_62"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return [chrID, chrPos, Strand]
 </pre>
 
-<h4 id="toc_67"><span style="color:DarkGreen;font-family:menlo, sans-serif">geneCoor2transCoor(geneID, start, end)</span></h4>
+<h4 id="geneCoor2transCoor"> <span style="color:DarkGreen;font-family:menlo, sans-serif">geneCoor2transCoor(geneID, start, end)</span> </h4>
 
-<h5 id="toc_68"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_63"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Convert gene-based coordinates to transcript-based coordinates
 </pre>
 
-<h5 id="toc_69"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_64"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneID              -- Gene id
@@ -1049,21 +1099,21 @@ start               -- Gene-based start position
 end                 -- Gene-based end position
 </pre>
 
-<h5 id="toc_70"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_65"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return  [chrID, chrStart, chrEnd, transID, transStart, transEnd], ... ]
 </pre>
 
-<h4 id="toc_71"><span style="color:DarkGreen;font-family:menlo, sans-serif">transCoor2geneCoor(transID, start, end)</span></h4>
+<h4 id="transCoor2geneCoor"> <span style="color:DarkGreen;font-family:menlo, sans-serif">transCoor2geneCoor(transID, start, end)</span> </h4>
 
-<h5 id="toc_72"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_66"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Convert transcript-based coordinates to gene-based coordinates
 </pre>
 
-<h5 id="toc_73"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_67"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID             -- Transcript id
@@ -1071,216 +1121,216 @@ start               -- Transcript-based start position
 end                 -- Transcript-based end position
 </pre>
 
-<h5 id="toc_74"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_68"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ [chrID, chrStart, chrEnd, geneID, geneStart, geneEnd], ... ]
 </pre>
 
-<h4 id="toc_75"><span style="color:DarkGreen;font-family:menlo, sans-serif">getTransList()</span></h4>
+<h4 id="getTransList"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getTransList()</span> </h4>
 
-<h5 id="toc_76"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_69"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return list of all transcript id
 </pre>
 
-<h5 id="toc_77"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_70"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 No
 </pre>
 
-<h5 id="toc_78"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_71"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ transID1, transID2, ... ]
 </pre>
 
-<h4 id="toc_79"><span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneList()</span></h4>
+<h4 id="getGeneList"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneList()</span> </h4>
 
-<h5 id="toc_80"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_72"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return list of all gene id
 </pre>
 
-<h5 id="toc_81"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_73"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 No
 </pre>
 
-<h5 id="toc_82"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_74"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ geneID1, geneID2, ... ]
 </pre>
 
-<h4 id="toc_83"><span style="color:DarkGreen;font-family:menlo, sans-serif">getmRNATransList()</span></h4>
+<h4 id="getmRNATransList"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getmRNATransList()</span> </h4>
 
-<h5 id="toc_84"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_75"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return list of all mRNA id
 </pre>
 
-<h5 id="toc_85"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_76"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 No
 </pre>
 
-<h5 id="toc_86"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_77"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ mRNAID1, mRNAID2, ... ]
 </pre>
 
-<h4 id="toc_87"><span style="color:DarkGreen;font-family:menlo, sans-serif">getmRNAGeneList()</span></h4>
+<h4 id="getmRNAGeneList"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getmRNAGeneList()</span> </h4>
 
-<h5 id="toc_88"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_78"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return list of all mRNA gene id
 </pre>
 
-<h5 id="toc_89"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_79"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 No
 </pre>
 
-<h5 id="toc_90"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_80"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ mRNAGeneID1, mRNAGeneID2, ... ]
 </pre>
 
-<h4 id="toc_91"><span style="color:DarkGreen;font-family:menlo, sans-serif">getLenSortedTransDictForGenes(only=[])</span></h4>
+<h4 id="getLenSortedTransDictForGenes"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getLenSortedTransDictForGenes(only=[])</span> </h4>
 
-<h5 id="toc_92"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_81"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return a dictionary of geneID to sorted transID list
 </pre>
 
-<h5 id="toc_93"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_82"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 only                --  Contraint transcript types, such as mRNA, snRNA ...
 </pre>
 
-<h5 id="toc_94"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_83"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return { geneID => [ transID1, transID2, ... ], ...}
 transcripts are sorted by length
 </pre>
 
-<h4 id="toc_95"><span style="color:DarkGreen;font-family:menlo, sans-serif">getTransByGeneID(geneID)</span></h4>
+<h4 id="getTransByGeneID"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getTransByGeneID(geneID)</span> </h4>
 
-<h5 id="toc_96"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_84"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return transcripts belong to specific gene
 </pre>
 
-<h5 id="toc_97"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_85"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneID              -- Gene id
 </pre>
 
-<h5 id="toc_98"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_86"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ transID1, transID2... ]
 </pre>
 
-<h4 id="toc_99"><span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneByGeneName(geneName)</span></h4>
+<h4 id="getGeneByGeneName"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneByGeneName(geneName)</span> </h4>
 
-<h5 id="toc_100"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_87"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return gene id with specific gene name
 </pre>
 
-<h5 id="toc_101"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_88"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneName            -- Gene symbol
 </pre>
 
-<h5 id="toc_102"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_89"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return geneID
 </pre>
 
-<h4 id="toc_103"><span style="color:DarkGreen;font-family:menlo, sans-serif">getTransByGeneName(geneName)</span></h4>
+<h4 id="getTransByGeneName"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getTransByGeneName(geneName)</span> </h4>
 
-<h5 id="toc_104"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_90"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return transcripts belong to specific gene
 </pre>
 
-<h5 id="toc_105"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_91"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneName            -- Gene symbol
 </pre>
 
-<h5 id="toc_106"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_92"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ transID1, transID2... ]
 </pre>
 
-<h4 id="toc_107"><span style="color:DarkGreen;font-family:menlo, sans-serif">getTransByGeneType(geneType)</span></h4>
+<h4 id="getTransByGeneType"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getTransByGeneType(geneType)</span> </h4>
 
-<h5 id="toc_108"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_93"><span style="color:darkred">Features</span></h5>
 
 <pre>
  Return a list of transcripts belong to specific gene type
 </pre>
 
-<h5 id="toc_109"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_94"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneType            -- Gene type
 </pre>
 
-<h5 id="toc_110"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_95"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return [ transID1, transID2... ]
 </pre>
 
-<h4 id="toc_111"><span style="color:DarkGreen;font-family:menlo, sans-serif">getTransSeq(transID)</span></h4>
+<h4 id="getTransSeq"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getTransSeq(transID)</span> </h4>
 
-<h5 id="toc_112"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_96"><span style="color:darkred">Features</span></h5>
 
 <pre>
  Return transcript sequence
 </pre>
 
-<h5 id="toc_113"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_97"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID             -- Transcript id
 </pre>
 
-<h5 id="toc_114"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_98"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return sequence
 </pre>
 
-<h4 id="toc_115"><span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneCombinedIntronExon(geneID, verbose=True)</span></h4>
+<h4 id="getGeneCombinedIntronExon"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getGeneCombinedIntronExon(geneID, verbose=True)</span> </h4>
 
-<h5 id="toc_116"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_99"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Parse gene intron/exon regions:
@@ -1288,42 +1338,42 @@ Parse gene intron/exon regions:
     2. Remove the exon regions from gene regions, they are defined as intron regions
 </pre>
 
-<h5 id="toc_117"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_100"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 geneID          -- Gene id
 verbose         -- Print error information when error occured
 </pre>
 
-<h5 id="toc_118"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_101"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return: [intron_regions, exon_regions]
 </pre>
 
-<h4 id="toc_119"><span style="color:DarkGreen;font-family:menlo, sans-serif">show_mRNA_structure(transID)</span></h4>
+<h4 id="showRNAStructure"> <span style="color:DarkGreen;font-family:menlo, sans-serif">showRNAStructure(transID)</span> </h4>
 
-<h5 id="toc_120"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_102"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return string of mRNA sequence with color labeled its UTR/CDS/Codons
 </pre>
 
-<h5 id="toc_121"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_103"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID         -- Transcript id
 </pre>
 
-<h5 id="toc_122"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_104"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return: colored sequence
 </pre>
 
-<h4 id="toc_123"><span style="color:DarkGreen;font-family:menlo, sans-serif">label_RNA_position(transID, region, bn=None, bw=None)</span></h4>
+<h4 id="labelRNAPosition"> <span style="color:DarkGreen;font-family:menlo, sans-serif">labelRNAPosition(transID, region, bn=None, bw=None)</span> </h4>
 
-<h5 id="toc_124"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_105"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Return string of mRNA sequence with color labeled its UTR/CDS/Codons
@@ -1333,7 +1383,7 @@ Return string of mRNA sequence with color labeled its UTR/CDS/Codons
          5'UTR        CDS                3'UTR
 </pre>
 
-<h5 id="toc_125"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_106"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID         -- Transcript id
@@ -1343,28 +1393,28 @@ bw              -- Bin width
 bw and bn cannot be specified at the same time
 </pre>
 
-<h5 id="toc_126"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_107"><span style="color:darkred">Return</span></h5>
 
 <pre>
 return: -------|||||||||||||||||--------------------------
 </pre>
 
-<h4 id="toc_127"><span style="color:DarkGreen;font-family:menlo, sans-serif">get_RNA_position(transID, region)</span></h4>
+<h4 id="getRNAPosition"> <span style="color:DarkGreen;font-family:menlo, sans-serif">getRNAPosition(transID, region)</span> </h4>
 
-<h5 id="toc_128"><span style="color:darkred">Features</span></h5>
+<h5 id="toc_108"><span style="color:darkred">Features</span></h5>
 
 <pre>
 Get the position of region located in mRNA
 </pre>
 
-<h5 id="toc_129"><span style="color:darkred">Parameters</span></h5>
+<h5 id="toc_109"><span style="color:darkred">Parameters</span></h5>
 
 <pre>
 transID         -- Transcript id
 region          -- [start, end]
 </pre>
 
-<h5 id="toc_130"><span style="color:darkred">Return</span></h5>
+<h5 id="toc_110"><span style="color:darkred">Return</span></h5>
 
 <pre>
 Return any one of:
@@ -1378,7 +1428,138 @@ Return any one of:
     -> INVALID
 </pre>
 
-<h2 id="toc_131">Authors</h2>
+<h2 id="toc_111">Demos</h2>
+
+<h3 id="toc_112">1. Coordinate transformation</h3>
+
+<div><pre class="line-numbers"><code class="language-python">import GAP
+
+hg19_parser = GAP.init(&quot;hg19.genomeCoor.bed&quot;)
+
+hg19_parser.geneCoor2genomeCoor(&quot;ENSG00000227232.5_2&quot;, 10)
+# [&#39;chr1&#39;, 29561, &#39;-&#39;]
+
+hg19_parser.geneCoor2transCoor(&quot;ENSG00000227232.5_2&quot;, 1, 11)
+# [[&#39;chr1&#39;, 29560, 29570, &#39;ENST00000488147.1_1&#39;, 1, 11]]
+
+hg19_parser.transCoor2genomeCoor(&quot;ENST00000456328.2_1&quot;, 1)
+# [&#39;chr1&#39;, 11869, &#39;+&#39;]
+
+hg19_parser.transCoor2geneCoor(&quot;ENST00000456328.2_1&quot;, 1, 11)
+# [[&#39;chr1&#39;, 11869, 11879, &#39;ENSG00000223972.5_2&#39;, 1, 11]]
+
+hg19_parser.genomeCoor2geneCoor(&quot;chr1&quot;, 11869, 11869+10, &#39;+&#39;)
+# [[&#39;chr1&#39;, 11869, 11879, &#39;ENSG00000223972.5_2&#39;, 1, 11]]
+
+hg19_parser.genomeCoor2transCoor(&quot;chr1&quot;, 11869, 11869+10, &#39;+&#39;)
+# [[&#39;chr1&#39;, 11869, 11879, &#39;ENST00000456328.2_1&#39;, 1, 11]]
+
+hg19_parser.genomeCoor2transCoor(&quot;chr14&quot;, 11869, 11869+10, &#39;+&#39;)
+# A chromosome or TransID/GeneID not in genomefile will raise a KeyError
+
+hg19_parser.transCoor2geneCoor(&quot;ENST00000456328.2_1&quot;, 1, 1100000)
+# out of Gene range will raise CoorFunc.out_of_range</code></pre></div>
+
+<h3 id="toc_113">2. Compare CDS/UTR length of Gencode/RefSeq annotation</h3>
+
+<div><pre class="line-numbers"><code class="language-python">import GAP
+
+def statistic_UTR_dist(genomeCoorFile):
+    parser = GAP.init(genomeCoorFile)
+    utr5_len_dict = {}
+    utr3_len_dict = {}
+    cds_len_dict = {}
+    for transID in parser.getmRNATransList():
+        RNA = parser.getTransFeature(transID)
+        
+        cds_start, cds_end = RNA[&#39;cds_start&#39;], RNA[&#39;cds_end&#39;]
+        
+        length = RNA[&#39;trans_len&#39;]
+        
+        utr5_len = cds_start - 1
+        utr3_len = length - cds_end
+        cds_len = cds_end - cds_start + 1
+        
+        gene_name = RNA[&#39;gene_name&#39;]
+        
+        if utr5_len &gt; 0 and utr3_len &gt; 0:
+            utr5_len_dict[gene_name] = utr5_len_dict.get(gene_name, []) + [utr5_len]
+            utr3_len_dict[gene_name] = utr3_len_dict.get(gene_name, []) + [utr3_len]
+            cds_len_dict[gene_name] = cds_len_dict.get(gene_name, []) + [cds_len]
+    
+    return utr5_len_dict, utr3_len_dict, cds_len_dict
+
+hg38_utr5_gencode, hg38_utr3_gencode, hg38_cds_gencode = statistic_UTR_dist(&quot;hg38_gencode.genomeCoor.bed&quot;)
+hg38_utr5_ncbi,    hg38_utr3_ncbi,    hg38_cds_ncbi    = statistic_UTR_dist(&quot;hg38_ncbi.genomeCoor.bed&quot;)
+
+mm10_utr5_gencode, mm10_utr3_gencode, mm10_cds_gencode = statistic_UTR_dist(&quot;mm10_gencode.genomeCoor.bed&quot;)
+mm10_utr5_ncbi,    mm10_utr3_ncbi,    mm10_cds_ncbi    = statistic_UTR_dist(&quot;mm10_ncbi.genomeCoor.bed&quot;)
+
+def plot_single_anno(UTR5_Dict, UTR3_Dict, CDS_Dict):
+    import seaborn as sns
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    
+    dataSet = []
+    for gene_name in UTR5_Dict:
+        dataSet += [ [item, &quot;UTR5&quot;] for item in UTR5_Dict[gene_name] ]
+    
+    for gene_name in UTR3_Dict:
+        dataSet += [ [item, &quot;UTR3&quot;] for item in UTR3_Dict[gene_name] ]
+    
+    for gene_name in CDS_Dict:
+        dataSet += [ [item, &quot;CDS&quot;] for item in CDS_Dict[gene_name] ]
+    
+    dataSet = pd.DataFrame(dataSet, columns=[&#39;length&#39;, &#39;type&#39;])
+    
+    # show some statistics
+    print &quot;median of UTR5: &quot;, dataSet.loc[dataSet.type==&quot;UTR5&quot;, &quot;length&quot;].median()
+    print &quot;median of UTR3: &quot;, dataSet.loc[dataSet.type==&quot;UTR3&quot;, &quot;length&quot;].median()
+    print &quot;median of CDS: &quot;, dataSet.loc[dataSet.type==&quot;CDS&quot;, &quot;length&quot;].median()
+    
+    # plot
+    sns.violinplot(data=dataSet, x=&#39;type&#39;, y=&#39;length&#39;)
+    plt.xlabel(&quot;mRNA Part&quot;, fontsize=&quot;large&quot;)
+    plt.ylabel(&quot;Length Distribution&quot;, fontsize=&quot;large&quot;)
+    plt.ylim(-2000,5000)
+    plt.show()
+
+plot_single_anno(hg38_utr5_gencode, hg38_utr3_gencode, hg38_cds_gencode)
+plot_single_anno(hg38_utr5_ncbi, hg38_utr3_ncbi, hg38_cds_ncbi)
+
+plot_single_anno(mm10_utr5_gencode, mm10_utr3_gencode, mm10_cds_gencode)
+plot_single_anno(mm10_utr5_ncbi, mm10_utr3_ncbi, mm10_cds_ncbi)
+
+def compair_anno(Gencode, RefSeq, title):
+    import numpy as np
+    import seaborn as sns
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    
+    dataSet = []
+    for gene_name in set(Gencode)&amp;set(RefSeq):
+        dataSet.append( [np.median(Gencode[gene_name]), &quot;Gencode&quot;] )
+        dataSet.append( [np.median(RefSeq[gene_name]), &quot;RefSeq&quot;] )
+    
+    dataSet = pd.DataFrame(dataSet, columns=[&#39;length&#39;, &#39;type&#39;])
+    
+    # show some statistics
+    print &quot;median of Gencode: &quot;, dataSet.loc[dataSet.type==&quot;Gencode&quot;, &quot;length&quot;].median()
+    print &quot;median of RefSeq: &quot;, dataSet.loc[dataSet.type==&quot;RefSeq&quot;, &quot;length&quot;].median()
+    
+    # plot
+    sns.violinplot(data=dataSet, x=&#39;type&#39;, y=&#39;length&#39;)
+    plt.xlabel(title, fontsize=&quot;large&quot;)
+    plt.ylabel(&quot;Length Distribution&quot;, fontsize=&quot;large&quot;)
+    plt.ylim(-500,2000)
+    plt.show()
+
+
+compair_anno(hg38_utr5_gencode, hg38_utr5_ncbi, &quot;5UTR&quot;)
+compair_anno(hg38_utr3_gencode, hg38_utr3_ncbi, &quot;3UTR&quot;)
+compair_anno(hg38_cds_gencode,  hg38_cds_ncbi,  &quot;CDS&quot;)</code></pre></div>
+
+<h2 id="toc_114">Authors</h2>
 
 <ul>
 <li><strong>Li Pan</strong> - <em>Programmer</em> - <a href="http://zhanglab.life.tsinghua.edu.cn">Zhanglab</a></li>

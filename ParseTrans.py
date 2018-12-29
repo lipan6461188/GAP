@@ -303,7 +303,7 @@ def eval_start_stop_codon(GAPer, Sequence):
     elif stop_plus_3 > stop_minus_3 and stop_plus_3 > stop_0:
         return 3
 
-def show_mRNA_structure(transFeature, sequence, bias=0):
+def showRNAStructure(transFeature, sequence, bias=0):
     
     cds_start = transFeature['cds_start']
     cds_end = transFeature['cds_end']
@@ -326,14 +326,14 @@ def show_mRNA_structure(transFeature, sequence, bias=0):
         i += 3
         j += 1
     
-    UTR5 = Colors.f(UTR5, fc='lightgray', bc='default', ft='normal')
+    UTR5 = Colors.f(UTR5, fc='green', bc='default', ft='normal')
     Start_codon = Colors.f(Start_codon, fc='lightred', bc='default', ft='bold')
     Stop_codon = Colors.f(Stop_codon, fc='lightred', bc='default', ft='bold') 
-    UTR3 = Colors.f(UTR3, fc='lightgray', bc='default', ft='normal')
+    UTR3 = Colors.f(UTR3, fc='green', bc='default', ft='normal')
     
     return UTR5+Start_codon+formatCDS+Stop_codon+UTR3
 
-def label_RNA_position(Parser, tid, region, bn=None, bw=None):
+def labelRNAPosition(Parser, tid, region, bn=None, bw=None):
     """
     bn: Bin number (default: 50)
     bw: Bin width
@@ -409,7 +409,7 @@ def label_RNA_position(Parser, tid, region, bn=None, bw=None):
     return string
 
 
-def get_RNA_position(Parser, tid, region):
+def getRNAPosition(Parser, tid, region):
     """
     return type: [ "not_mRNA", "5UTR", "span_5UTR_CDS", "CDS", "span_CDS_3UTR", "3UTR", "span_5UTR_CDS_3UTR", "INVALID" ]
     """
@@ -819,7 +819,7 @@ class ParseTransClass(object):
         
         return getGeneCombinedIntronExon(self, geneID=geneID, verbose=verbose)
     
-    def show_mRNA_structure(self, transID):
+    def showRNAStructure(self, transID):
         """
         transID         -- Transcript id
         
@@ -828,12 +828,12 @@ class ParseTransClass(object):
         if self.seqFileName != "":
             ft = self.getTransFeature(transID)
             seq = self.getTransSeq(transID)
-            return show_mRNA_structure(ft, seq, bias=self.stop_bias)
+            return showRNAStructure(ft, seq, bias=self.stop_bias)
         else:
             print >>sys.stderr, 'Not define Seq! Use addSeq() to add Seq'
             raise KeyError
     
-    def label_RNA_position(self, transID, region, bn=None, bw=None):
+    def labelRNAPosition(self, transID, region, bn=None, bw=None):
         """
         transID         -- Transcript id
         region          -- [start, end]
@@ -844,9 +844,9 @@ class ParseTransClass(object):
         -------|||||||||||||||||--------------------------
          5'UTR        CDS                3'UTR
         """
-        return label_RNA_position(self, transID, region, bn=bn, bw=bw)
+        return labelRNAPosition(self, transID, region, bn=bn, bw=bw)
     
-    def get_RNA_position(self, transID, region):
+    def getRNAPosition(self, transID, region):
         """
         transID         -- Transcript id
         region          -- [start, end]
@@ -861,5 +861,5 @@ class ParseTransClass(object):
             -> span_5UTR_CDS_3UTR
             -> INVALID
         """
-        return get_RNA_position(self, transID, region)
+        return getRNAPosition(self, transID, region)
 
