@@ -146,7 +146,7 @@ for loc in locs:
 
 ## Notice
 
-Complete stability information in doc/Introduction.html
+Complete documentation is in doc/Introduction.html
 
 
 ## Authors
