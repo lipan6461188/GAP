@@ -1,6 +1,6 @@
 # GAP
 
-<b>G</b>FF <b>A</b>nnotation <b>P</b>aser (<a href="https://github.com/lipan6461188/GAP" style="text-decoration:none;color:blue;">GAP</a>) is a tool for parsing Gencode/Ensembl GTF and NCBI GFF3 genome annotation files.
+<b>G</b>enome <b>A</b>nnotation <b>P</b>aser (<a href="https://github.com/lipan6461188/GAP" style="text-decoration:none;color:blue;">GAP</a>) is a tool for parsing Gencode/Ensembl GTF and NCBI GFF3 genome annotation files.
 
 ## Installation
 

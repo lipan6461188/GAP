@@ -3,7 +3,7 @@
 import GTFParserFunc
 import CoorFunc
 import sys
-import Colors
+import GAP_Colors as Colors
 
 ___ParseTrans = {
     'first_biuldGeneParser': 1
