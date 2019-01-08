@@ -21,11 +21,12 @@ parseGTF -  Parse genome coordinate information and transcript
 \x1b[1mUSAGE:\x1b[0m 
   %s -g GFF3/GTF -o output_prefix -s [ensembl|gencode|ncbi]
 \x1b[1mHELP:\x1b[0m
-     -g         genome annotation
-     -o         output file prefix
-     -s         <ensembl/gencode/ncbi> data source
+     -g             Genome annotation
+     -o             Output file prefix
+     -s             <ensembl/gencode/ncbi> data source
 
-     --genome   fetch transcriptome from genome file, produce a prefix_transcriptome.fa file
+     --genome       Fetch transcriptome from genome file, produce a prefix_transcriptome.fa file
+     --noscaffold   Remove scaffolds. Scaffolds are defined as those chromosomes with id length > 6 and not startswith chr and NC_
 
 \x1b[1mVERSION:\x1b[0m
     %s
@@ -38,14 +39,16 @@ parseGTF -  Parse genome coordinate information and transcript
 
 
 def init():
-    params = { 'genomeFile': None }
-    opts, args = getopt.getopt(sys.argv[1:], 'hg:o:s:', ['genome='])
+    params = { 'genomeFile': None, 'noscaffold': False }
+    opts, args = getopt.getopt(sys.argv[1:], 'hg:o:s:', ['genome=', 'noscaffold'])
     for op, value in opts:
         if op == '-h':
             print Usage;
             sys.exit(-1)
         elif op == '--genome':
             params['genomeFile'] = value
+        elif op == '--noscaffold':
+            params['noscaffold'] = True
         elif op == '-g':
             params['input'] = os.path.abspath(value)
         elif op == '-o':
@@ -73,10 +76,10 @@ def main():
     transCoorFn = params['output']+'.transCoor.bed'
     transcriptomeFn = params['output']+'_transcriptome.fa'
     if params['source'] in ('gencode', 'ensembl'):
-        gtf_container = GTFParserFunc.read_ensembl_gtf(params['input'])
+        gtf_container = GTFParserFunc.read_ensembl_gtf(params['input'], rem_scaffold=params['noscaffold'])
         GTFParserFunc.write_gtf_genomeCoor_bed(gtf_container, genomeCoorFn)
     elif params['source'] == 'ncbi':
-        gff3_container = GTFParserFunc.read_ncbi_gff3(params['input'])
+        gff3_container = GTFParserFunc.read_ncbi_gff3(params['input'], rem_scaffold=params['noscaffold'])
         GTFParserFunc.write_gff3_genomeCoor_bed(gff3_container, genomeCoorFn)
     
     GTFParserFunc.genomeCoorBed_To_transCoorBed(genomeCoorFn, transCoorFn)

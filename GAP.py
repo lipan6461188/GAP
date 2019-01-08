@@ -14,7 +14,7 @@ def init(genomeCoorBedFile, seqFn='', showAttr=True, rem_tVersion=False, rem_gVe
     return ParseTrans.ParseTransClass(genomeCoorBedFile, seqFileName=seqFn, showAttr=showAttr, 
                                         remove_tid_version=rem_tVersion, remove_gid_version=rem_gVersion)
 
-def initGTF(AnnotationGTF, source, genomeFile='', showAttr=True, rem_tVersion=False, rem_gVersion=False, verbose=False):
+def initGTF(AnnotationGTF, source, genomeFile='', showAttr=True, rem_tVersion=False, rem_gVersion=False, rem_scaffold=False, verbose=False):
     """
     AnnotationGTF       -- Ensembl/Gencode GTF file or NCBI GFF3 file
     genomeFile          -- Genome file
@@ -22,6 +22,8 @@ def initGTF(AnnotationGTF, source, genomeFile='', showAttr=True, rem_tVersion=Fa
     showAttr            -- Show an example
     rem_tVersion        -- Remove version information. ENST000000022311.2 => ENST000000022311
     rem_gVersion        -- Remove version information. ENSG000000022311.2 => ENSG000000022311
+    rem_scaffold        -- Remove scaffolds. scaffolds are defined as 
+                           those chromosomes with id length > 6 and not startswith chr and NC_
     verbose             -- Show process information
     
     Return a ParseTransClass object to parse genome
@@ -29,10 +31,10 @@ def initGTF(AnnotationGTF, source, genomeFile='', showAttr=True, rem_tVersion=Fa
     import GTFParserFunc
     
     if source == 'Gencode' or source == 'Ensembl':
-        handle = GTFParserFunc.read_ensembl_gtf(AnnotationGTF)
+        handle = GTFParserFunc.read_ensembl_gtf(AnnotationGTF, rem_scaffold=rem_scaffold)
         Parser = __build_parser(handle, genomeFn=genomeFile, source=source, showAttr=showAttr, rem_tVersion=rem_tVersion, rem_gVersion=rem_gVersion, verbose=verbose)
     elif source == 'NCBI':
-        handle = GTFParserFunc.read_ncbi_gff3(AnnotationGTF)
+        handle = GTFParserFunc.read_ncbi_gff3(AnnotationGTF, rem_scaffold=rem_scaffold)
         Parser = __build_parser(handle, genomeFn=genomeFile, source=source, showAttr=showAttr, rem_tVersion=rem_tVersion, rem_gVersion=rem_gVersion, verbose=verbose)
     else:
         print >>sys.stderr, "Error: source must be Gencode or NCBI"

@@ -158,6 +158,11 @@ def writeTranscriptome(genomeCoorFileName, genomeFaFile, outTranscriptomeFaFile,
     
     OUT.close()
 
+def is_scaffold(chrID):
+    if chrID.startswith('chr') or chrID.startswith('NC_') or len(chrID)<=6:
+        return False
+    else:
+        return True
 
 ###############################
 ## Ensembl GTF Functions
@@ -175,7 +180,12 @@ def parse_gtf_attributes(attributesString):
             print 'Warning: '+Tuple+' cannot be unpacked, skip it'
     return attributes
 
-def read_ensembl_gtf(gtfFileName):
+def read_ensembl_gtf(gtfFileName, rem_scaffold=False):
+    """
+    gtfFileName             -- Ensembl/Gencode GTF file
+    rem_scaffold            -- Remove scaffolds. scaffolds are defined as 
+                               those chromosomes with id length > 6 and not startswith chr and NC_
+    """
     gtf_container = {'gene':{}, 'RNA':{}, 'CDS':{}, 'exon':{}}
     
     lineCount = 0
@@ -185,6 +195,9 @@ def read_ensembl_gtf(gtfFileName):
         if line[0] == '#': continue
         
         (Chr, Source, Type, Chr_Start, Chr_End, Score, Strand, Phase, Attributes) = line.strip().split('\t')
+        if rem_scaffold and is_scaffold(Chr):
+            continue
+        
         attributes = parse_gtf_attributes(Attributes)
         attributes['chr'] = Chr; attributes['start'] = Chr_Start; attributes['end'] = Chr_End; attributes['strand'] = Strand
         
@@ -297,8 +310,12 @@ def parse_gff3_attributes(attributesString):
             attributes[ Key ] = Value
     return attributes
 
-def read_ncbi_gff3(gff3FileName):
-    
+def read_ncbi_gff3(gff3FileName, rem_scaffold=False):
+    """
+    gtfFileName             -- NCBI GFF3 file
+    rem_scaffold            -- Remove scaffolds. scaffolds are defined as 
+                               those chromosomes with id length > 6 and not startswith chr and NC_
+    """
     gff3_container = {'region': {}, 'others':{}, 'RNA':{}, 'exon':{}, 'CDS':{}}
     RNA_ids = set()
     mRNA_ids = set()
@@ -310,6 +327,9 @@ def read_ncbi_gff3(gff3FileName):
         if line[0] == '#': continue
         
         (Chr, Source, Type, Chr_Start, Chr_End, Score, Strand, Phase, Attributes) = line.strip().split('\t')
+        if rem_scaffold and is_scaffold(Chr):
+            continue
+        
         attributes = parse_gff3_attributes(Attributes)
         attributes['chr'] = Chr; attributes['start'] = Chr_Start; attributes['end'] = Chr_End; attributes['strand'] = Strand
         
