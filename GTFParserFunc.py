@@ -310,11 +310,12 @@ def parse_gff3_attributes(attributesString):
             attributes[ Key ] = Value
     return attributes
 
-def read_ncbi_gff3(gff3FileName, rem_scaffold=False):
+def read_ncbi_gff3(gff3FileName, rem_scaffold=False, raw_chrID=False):
     """
     gtfFileName             -- NCBI GFF3 file
     rem_scaffold            -- Remove scaffolds. scaffolds are defined as 
                                those chromosomes with id length > 6 and not startswith chr and NC_
+    raw_chrID               -- Don't convert NC_* to chrXX code
     """
     gff3_container = {'region': {}, 'others':{}, 'RNA':{}, 'exon':{}, 'CDS':{}}
     RNA_ids = set()
@@ -327,8 +328,10 @@ def read_ncbi_gff3(gff3FileName, rem_scaffold=False):
         if line[0] == '#': continue
         
         (Chr, Source, Type, Chr_Start, Chr_End, Score, Strand, Phase, Attributes) = line.strip().split('\t')
-        if rem_scaffold and is_scaffold(Chr):
-            continue
+        
+        if not raw_chrID:
+            if rem_scaffold and is_scaffold(Chr):
+                continue
         
         attributes = parse_gff3_attributes(Attributes)
         attributes['chr'] = Chr; attributes['start'] = Chr_Start; attributes['end'] = Chr_End; attributes['strand'] = Strand
@@ -356,7 +359,12 @@ def read_ncbi_gff3(gff3FileName, rem_scaffold=False):
     
     for RNA_id in RNA_ids:
         RNA = gff3_container['others'][ RNA_id ]
-        if 'gene' not in RNA: RNA['gene'] = 'NULL'
+        if 'gene' not in RNA:
+            if 'Name' in RNA:
+                RNA['gene'] = RNA['Name']
+            else:
+                RNA['gene'] = 'NULL'
+        
         if 'GeneID' not in RNA: RNA['GeneID'] = 'NULL'
         
         if RNA_id in mRNA_ids:
@@ -383,11 +391,11 @@ def read_ncbi_gff3(gff3FileName, rem_scaffold=False):
         
     return gff3_container
 
-def write_gff3_genomeCoor_bed(gff3_container, genomeCoorFileName):
+def write_gff3_genomeCoor_bed(gff3_container, genomeCoorFileName, raw_chrID=False):
     
     tmpFileName = genomeCoorFileName + ".tmp"
     
-    NCToChr = build_NC_To_chr_dict(gff3_container)
+    NCToChr = build_NC_To_chr_dict(gff3_container, raw_chrID=raw_chrID)
     rnaIDToTransID = build_rnaID_To_transID(gff3_container)
     
     TMP = open(tmpFileName, 'w')
@@ -472,8 +480,8 @@ def build_rnaID_To_transID(gff3_container):
     
     return rnaIDToTransID
 
-def build_chr_To_NC_dict(gff3_container):
-    NC_To_chr = build_NC_To_chr_dict(gff3_container)
+def build_chr_To_NC_dict(gff3_container, raw_chrID=False):
+    NC_To_chr = build_NC_To_chr_dict(gff3_container, raw_chrID=raw_chrID)
     
     chrToNC = {}
     for NC,chrID in NC_To_chr.items():
@@ -481,12 +489,14 @@ def build_chr_To_NC_dict(gff3_container):
     
     return chrToNC
 
-def build_NC_To_chr_dict(gff3_container):
+def build_NC_To_chr_dict(gff3_container, raw_chrID=False):
     NCToChr = {}
     regions = gff3_container['region']
     
     for ChrID in regions:
-        if ChrID.startswith('NC'):    
+        if raw_chrID:
+            NCToChr[ChrID] = ChrID
+        elif ChrID.startswith('NC'):    
             if 'chromosome' in regions[ChrID]:
                 NCToChr[ChrID] =  'chr'+regions[ChrID]['chromosome']
             elif regions[ChrID]['genome'] == 'mitochondrion':

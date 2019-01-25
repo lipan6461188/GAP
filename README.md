@@ -243,6 +243,8 @@ Parse GTF/GFF3 file and produce *.genomeCoor.bed, *.transCoor.bed and *_transcri
 
 optional:
 --genome   fetch transcriptome from genome file, produce a prefix_transcriptome.fa file
+--noscaffold	Remove scaffolds. Scaffolds are defined as those chromosomes with id length > 6 and not startswith chr and NC_
+--rawchr	Use raw chromosome ID, don't convert NC_* to chrXX. Only useful for NCBI source GFF3
 </pre>
 
 ##### <span style="color:darkred">Output</span>
