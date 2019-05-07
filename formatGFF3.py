@@ -20,7 +20,7 @@ formatGFF3 -  Transform GFF3 NC_* code to chr* code
 
 def main():
     if len(sys.argv) != 3:
-        print Usage
+        print(Usage)
         exit(-1)
     
     reformat_GFF3(sys.argv[1], sys.argv[2])

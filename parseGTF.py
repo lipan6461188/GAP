@@ -44,7 +44,7 @@ def init():
     opts, args = getopt.getopt(sys.argv[1:], 'hg:o:s:', ['genome=', 'noscaffold', 'rawchr'])
     for op, value in opts:
         if op == '-h':
-            print Usage;
+            print(Usage)
             sys.exit(-1)
         elif op == '--genome':
             params['genomeFile'] = value
@@ -60,16 +60,16 @@ def init():
             params['source'] = value
             assert value in ('ensembl', 'ncbi', 'gencode'), 'Error: -t <ensembl/gencode/ncbi>'
     if 'input' not in params:
-        print 'Error: specify -g'
-        print Usage
+        print('Error: specify -g')
+        print(Usage)
         sys.exit(-1)
     if 'output' not in params:
-        print 'Error: specify -o'
-        print Usage
+        print('Error: specify -o')
+        print(Usage)
         sys.exit(-1)
     if 'source' not in params:
-        print 'Error: specify -s'
-        print Usage
+        print('Error: specify -s')
+        print(Usage)
         sys.exit(-1)
     return params
 

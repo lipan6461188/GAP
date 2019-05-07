@@ -20,7 +20,7 @@ class SeqClass(object):
     def __init__(self, fa_fileName):
         self.fileName = fa_fileName
         self.genome = pysam.Fastafile(fa_fileName)
-        print "seqClass: 输入坐标前闭后开，0-based"
+        print("seqClass: 输入坐标前闭后开，0-based")
     def fetch(self, Chr, Start, End, Strand="+"):
         """获取序列"""
         if Strand == '+':

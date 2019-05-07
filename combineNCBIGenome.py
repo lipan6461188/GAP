@@ -21,12 +21,12 @@ combineGenome - Combine chromosomes from NCBI and convert the
 
 def main():
     if len(sys.argv)<=1 or sys.argv[0] in ("--help", "-h"):
-        print Usage
+        print(Usage)
         exit(-1)
     
     inFiles = sys.argv[1:]
     for infile in inFiles:
-        print >>sys.stderr, "Process "+infile+"..."
+        sys.stderr.writelines("Process "+infile+"..."+"\n")
         for line in open(infile):
             if line[0] == '>':
                 data = line[1:].rstrip().split('|')

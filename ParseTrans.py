@@ -10,11 +10,11 @@ ___ParseTrans = {
 }
 
 def showBeautifulExample(exmaple, title):
-    print >>sys.stderr, '# =-=-=-=-=-=-=-=-=-=-=-=-=-%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=' % (title, )
+    sys.stderr.writelines('# =-=-=-=-=-=-=-=-=-=-=-=-=-%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n' % (title, ))
     Pattern = "\t%15s:\t%-25s"
     for attr in sorted(exmaple.keys()):
-        print >>sys.stderr, Pattern % (attr, exmaple[attr])
-    print >>sys.stderr, '# =-=-=-=-=-=-=-=-=-=-=-=-=-%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=' % (len(title)/2 * "=-", )
+        sys.stderr.writelines(Pattern % (attr, exmaple[attr])+"\n")
+    sys.stderr.writelines('# =-=-=-=-=-=-=-=-=-=-=-=-=-%s=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n' % ( int(len(title)/2) * "=-", ))
 
 def format_Exon_UTR_str(raw_str, strand):
     regions_list = [ (int(region.split('-')[0]), int(region.split('-')[1])) for region in raw_str.split(',') ]
@@ -107,7 +107,7 @@ def ParseGenomeCoorBedFile(genomeCoorBedFile, showAttr=True, remove_tid_version=
     
     # show attribuets
     if showAttr and len(GAPer) != 0:
-        example_tid = GAPer.keys()[0]
+        example_tid = list(GAPer.keys())[0]
         exmaple = GAPer[example_tid]
         showBeautifulExample(exmaple, title='Object Example (%s)' % (example_tid, ))
     
@@ -129,7 +129,7 @@ def readSeq(seqFileName, remove_tid_version=False):
 
 def biuldGeneParser(GAPer, showAttr=True):
     if ___ParseTrans['first_biuldGeneParser']:
-        print >>sys.stderr, 'Warning: Gene Coordinate System: [1_based_start, 1_based_end]'
+        sys.stderr.writelines('Warning: Gene Coordinate System: [1_based_start, 1_based_end]\n')
         ___ParseTrans['first_biuldGeneParser'] = 0
     
     geneParser = {}
@@ -163,7 +163,7 @@ def biuldGeneParser(GAPer, showAttr=True):
     
     # show attribuets
     if showAttr and len(geneParser) != 0:
-        exmaple_gid = geneParser.keys()[0]
+        exmaple_gid = list(geneParser.keys())[0]
         exmaple = geneParser[exmaple_gid]
         showBeautifulExample(exmaple, title='Object Example (%s)' % (exmaple_gid, ))
     
@@ -217,7 +217,7 @@ def GeneIntron(GAPer, geneParser, geneID):
             #IsoformIntrons[transID] = Intron_From_Exom(exon_str, gene_start, gene_end, strand)
             IsoformIntrons[transID] = Intron_From_Exom(exon_str, trans_start, trans_end, strand)
         except NoExonError:
-            print >>sys.stderr, "Warning: %s have no Exon_str, Skip it" % (transID, )
+            sys.stderr.writelines("Warning: %s have no Exon_str, Skip it\n" % (transID, ))
     return IsoformIntrons
 
 
@@ -254,7 +254,7 @@ def GeneExon(GAPer, geneParser, geneID):
         try:
             IsoformExons[transID] = Exom_from_str(exon_str, gene_start, gene_end, strand)
         except NoExonError:
-            print >>sys.stderr,"Warning: %s have no Exon_str, Skip it" % (transID, )
+            sys.stderr.writelines("Warning: %s have no Exon_str, Skip it\n" % (transID, ))
     return IsoformExons
 
 def eval_start_stop_codon(GAPer, Sequence):
@@ -291,11 +291,11 @@ def eval_start_stop_codon(GAPer, Sequence):
             if stop_2 in stop_list: stop_0 += 1
             if stop_3 in stop_list: stop_plus_3 += 1
     
-    print "===========Check Start/Stop Codon Position==========="
-    print start_minus_3, start_0, start_plus_3
-    print stop_minus_3, stop_0, stop_plus_3
+    print("===========Check Start/Stop Codon Position===========")
+    print( "%s\t%s\t%s" % (start_minus_3, start_0, start_plus_3) )
+    print( "%s\t%s\t%s" % (stop_minus_3, stop_0, stop_plus_3) )
     if start_0 < start_minus_3 or start_0 < start_plus_3:
-        print >>sys.stderr, "Unexpected Error: start codon must be the first 3 bases in CDS"
+        sys.stderr.writelines("Unexpected Error: start codon must be the first 3 bases in CDS\n")
     if stop_minus_3 > stop_0 and stop_minus_3 > stop_plus_3:
         return -3
     elif stop_0 > stop_minus_3 and stop_0 > stop_plus_3:
@@ -314,7 +314,7 @@ def showRNAStructure(transFeature, sequence, bias=0):
     UTR3 = sequence[cds_end+bias:]
     
     if len(CDS)%3 != 0:
-        print >>sys.stderr, "Warning: The length of the CDS is not an integer multiple of 3"
+        sys.stderr.writelines("Warning: The length of the CDS is not an integer multiple of 3\n")
     
     formatCDS = ""
     i = 0; j = 0
@@ -497,12 +497,12 @@ def getGeneCombinedIntronExon(Parser, geneID, verbose=True):
     # 3. get intron
     new_introns = []
     if new_exons[0][0] != 1:
-        if verbose: print geneExons
+        if verbose: print(geneExons)
         raise Exception("Exons is not started from 1")
     for i in range(1, len(new_exons)):
         new_introns.append( (new_exons[i-1][1]+1, new_exons[i][0]-1) )
     if new_exons[-1][1] != Parser.getGeneParser()[geneID]['length']:
-        if verbose: print geneExons
+        if verbose: print(geneExons)
         raise Exception("Exons is not ended in geneLength")
     
     # 4. return
@@ -525,7 +525,7 @@ class ParseTransClass(object):
             self.Seq = readSeq(self.seqFileName, remove_tid_version=remove_tid_version)
             self.stop_bias = eval_start_stop_codon(self.GAPer, self.Seq)
         
-        print >>sys.stderr, 'Warning: Trans/Gene Coorninate System: [1_based_start, 1_based_end]'
+        sys.stderr.writelines('Warning: Trans/Gene Coorninate System: [1_based_start, 1_based_end]\n')
     
     def addSeq(self, seqFileName, remove_tid_version=False):
         """
@@ -567,7 +567,7 @@ class ParseTransClass(object):
         try:
             transFeature = self.GAPer[transID]
         except KeyError:
-            if verbose: print >>sys.stderr, 'Warning: no this transID: %s in GAPer' % (transID, )
+            if verbose: sys.stderr.writelines('Warning: no this transID: %s in GAPer\n' % (transID, ))
             raise KeyError
         
         if showAttr:
@@ -800,7 +800,7 @@ class ParseTransClass(object):
         Return transcript sequence
         """
         if self.seqFileName == "":
-            print >>sys.stderr, 'Not define Seq! Use addSeq() to add Seq'
+            sys.stderr.writelines('Not define Seq! Use addSeq() to add Seq\n')
             raise KeyError
         
         return self.Seq[transID]
@@ -830,7 +830,7 @@ class ParseTransClass(object):
             seq = self.getTransSeq(transID)
             return showRNAStructure(ft, seq, bias=self.stop_bias)
         else:
-            print >>sys.stderr, 'Not define Seq! Use addSeq() to add Seq'
+            sys.stderr.writelines('Not define Seq! Use addSeq() to add Seq\n')
             raise KeyError
     
     def labelRNAPosition(self, transID, region, bn=None, bw=None):

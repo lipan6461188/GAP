@@ -1,10 +1,20 @@
 #-*- coding:utf-8 -*-
 
-import sys, os, random, commands
+import sys, os, random
 
 ###############################
 ## Shared Functions
 ###############################
+
+def load_getstatusoutput():
+    import subprocess
+    if 'getoutput' in dir(subprocess):
+        return subprocess.getstatusoutput
+    else:
+        import commands
+        return commands.getstatusoutput
+
+getstatusoutput = load_getstatusoutput()
 
 def format_UTR(exonString, cdsString, strand, verbose=True):
     def correctList(List, strand):
@@ -53,10 +63,10 @@ def format_UTR(exonString, cdsString, strand, verbose=True):
                 break
             else:
                 if verbose:
-                    print >>sys.stderr, 'Impossible Event 1'
-                    print >>sys.stderr, 'exonString:',exonString
-                    print >>sys.stderr, 'cdsString:',cdsString
-                    print >>sys.stderr, strand
+                    sys.stderr.writelines('Impossible Event 1 '+"\n")
+                    sys.stderr.writelines('exonString: '+exonString+"\n")
+                    sys.stderr.writelines('cdsString: '+cdsString+"\n")
+                    sys.stderr.writelines(strand+"\n")
                 raise Exception("Impossible Event 1")
                 break
         for (exon_start, exon_end) in exonList[::-1]:
@@ -69,10 +79,10 @@ def format_UTR(exonString, cdsString, strand, verbose=True):
                 break
             else:
                 if verbose:
-                    print >>sys.stderr, 'Impossible Event 2'
-                    print >>sys.stderr, 'exonString:',exonString
-                    print >>sys.stderr, 'cdsString:',cdsString
-                    print >>sys.stderr, strand
+                    sys.stderr.writelines('Impossible Event 2'+"\n")
+                    sys.stderr.writelines('exonString: '+exonString+"\n")
+                    sys.stderr.writelines('cdsString: '+cdsString+"\n")
+                    sys.stderr.writelines(strand+"\n")
                 raise Exception("Impossible Event 2")
                 break
         utr_3.reverse()
@@ -87,10 +97,10 @@ def format_UTR(exonString, cdsString, strand, verbose=True):
                 break
             else:
                 if verbose:
-                    print >>sys.stderr, 'Impossible Event 3'
-                    print >>sys.stderr, 'exonString:',exonString
-                    print >>sys.stderr, 'cdsString:',cdsString
-                    print >>sys.stderr, strand
+                    sys.stderr.writelines('Impossible Event 3'+"\n")
+                    sys.stderr.writelines('exonString: '+exonString+"\n")
+                    sys.stderr.writelines('cdsString: '+cdsString+"\n")
+                    sys.stderr.writelines(strand+"\n")
                 raise Exception("Impossible Event 3")
                 break
         for (exon_start, exon_end) in exonList[::-1]:
@@ -103,10 +113,10 @@ def format_UTR(exonString, cdsString, strand, verbose=True):
                 break
             else:
                 if verbose:
-                    print >>sys.stderr, 'Impossible Event 4'
-                    print >>sys.stderr, 'exonString:',exonString
-                    print >>sys.stderr, 'cdsString:',cdsString
-                    print >>sys.stderr, strand
+                    sys.stderr.writelines('Impossible Event 4'+"\n")
+                    sys.stderr.writelines('exonString: '+exonString+"\n")
+                    sys.stderr.writelines('cdsString: '+cdsString+"\n")
+                    sys.stderr.writelines(strand+"\n")
                 raise Exception("Impossible Event 4")
                 break
         utr_3.reverse()
@@ -139,7 +149,7 @@ def writeTranscriptome(genomeCoorFileName, genomeFaFile, outTranscriptomeFaFile,
                 if ChrID not in no_chr_set:
                     no_chr_set.add(ChrID)
                     if verbose:
-                        print >>sys.stderr, 'Warning: %s not in %s' % (ChrID, genomeFaFile)
+                        sys.stderr.writelines('Warning: %s not in %s' % (ChrID, genomeFaFile)+"\n")
                 continue
             
             exonsList = Parser.getGeneExon(geneID)[tid][0]
@@ -151,10 +161,10 @@ def writeTranscriptome(genomeCoorFileName, genomeFaFile, outTranscriptomeFaFile,
                     RNA_seq += SeqFetcher.fetch(ChrID, exon[0]-1, exon[1], strand)
                 except KeyError:
                     if verbose:
-                        print >>sys.stderr, 'Warning: KeyError -> %s\t%d\t%d\t%s' % (ChrID, exon[0]-1, exon[1], strand)
+                        sys.stderr.writelines('Warning: KeyError -> %s\t%d\t%d\t%s' % (ChrID, exon[0]-1, exon[1], strand)+"\n")
                     continue
             
-            print >>OUT, '>%s\t%s\n%s' % (tid, seqAnno, SeqFetch.cutSeq(RNA_seq))
+            OUT.writelines('>%s\t%s\n%s\n' % (tid, seqAnno, SeqFetch.cutSeq(RNA_seq)))
     
     OUT.close()
 
@@ -177,7 +187,7 @@ def parse_gtf_attributes(attributesString):
             Value = ' '.join(Key_Value[1:])
             attributes[ Key ] = Value.strip('"')
         except ValueError:
-            print 'Warning: '+Tuple+' cannot be unpacked, skip it'
+            print('Warning: '+Tuple+' cannot be unpacked, skip it')
     return attributes
 
 def read_ensembl_gtf(gtfFileName, rem_scaffold=False):
@@ -191,7 +201,7 @@ def read_ensembl_gtf(gtfFileName, rem_scaffold=False):
     lineCount = 0
     for line in open(gtfFileName):
         lineCount += 1
-        if lineCount % 100000 == 0: print '\tRead %d Lines...' % (lineCount,)
+        if lineCount % 100000 == 0: print('\tRead %d Lines...' % (lineCount,))
         if line[0] == '#': continue
         
         (Chr, Source, Type, Chr_Start, Chr_End, Score, Strand, Phase, Attributes) = line.strip().split('\t')
@@ -240,12 +250,12 @@ def write_gtf_genomeCoor_bed(gtf_container, genomeCoorFileName):
     
     TMP.close()
     
-    return_code, output = commands.getstatusoutput( "sort -k 1,1 -k2n,3n %s > %s" % (tmpFileName, genomeCoorFileName) )
+    return_code, output = getstatusoutput( "sort -k 1,1 -k2n,3n %s > %s" % (tmpFileName, genomeCoorFileName) )
     if return_code != 0:
-        print 'Error: cat and sort step is broken. Please check the file: ', tmpFileName
+        print('Error: cat and sort step is broken. Please check the file: '+tmpFileName)
     else:
         os.remove(tmpFileName)
-        print 'Success!'
+        print('Success!')
 
 def get_format_Ensembl_gtf_RNA_item(gtf_container, rna_ID, verbose=True):
     
@@ -275,11 +285,11 @@ def get_format_Ensembl_gtf_RNA_item(gtf_container, rna_ID, verbose=True):
         
         except:
             if verbose:
-                print >>sys.stderr, 'Skip this transcript: ',rna_ID
-                print >>sys.stderr, 'exonString:',exonString
-                print >>sys.stderr, 'cdsString:',cdsString
-                print >>sys.stderr, 'strand:',Strand
-                print >>sys.stderr, '\n'
+                sys.stderr.writelines('Skip this transcript: '+rna_ID+"\n")
+                sys.stderr.writelines('exonString: '+exonString+"\n")
+                sys.stderr.writelines('cdsString: '+cdsString+"\n")
+                sys.stderr.writelines('strand: '+Strand+"\n")
+                sys.stderr.writelines('\n\n')
             return None
         
         utr_5_string = ','.join(["%s-%s"%(it[0], it[1]) for it in utr_5_list])
@@ -324,7 +334,7 @@ def read_ncbi_gff3(gff3FileName, rem_scaffold=False, raw_chrID=False):
     lineCount = 0
     for line in open(gff3FileName):
         lineCount += 1
-        if lineCount % 100000 == 0: print '\tRead %d Lines...' % (lineCount,)
+        if lineCount % 100000 == 0: print('\tRead %d Lines...' % (lineCount,))
         if line[0] == '#': continue
         
         (Chr, Source, Type, Chr_Start, Chr_End, Score, Strand, Phase, Attributes) = line.strip().split('\t')
@@ -409,12 +419,12 @@ def write_gff3_genomeCoor_bed(gff3_container, genomeCoorFileName, raw_chrID=Fals
     
     TMP.close()
     
-    return_code, output = commands.getstatusoutput( "sort -k 1,1 -k2n,3n %s > %s" % (tmpFileName, genomeCoorFileName) )
+    return_code, output = getstatusoutput( "sort -k 1,1 -k2n,3n %s > %s" % (tmpFileName, genomeCoorFileName) )
     if return_code != 0:
-        print 'Error: cat and sort step is broken. Please check the file: ', tmpFileName
+        print('Error: cat and sort step is broken. Please check the file: '+tmpFileName)
     else:
         os.remove(tmpFileName)
-        print 'Success!'
+        print('Success!')
 
 def get_format_NCBI_gff3_RNA_item(gff3_container, rna_ID, NCToChr, rnaIDTotransID, verbose=True):
     """
@@ -452,11 +462,11 @@ def get_format_NCBI_gff3_RNA_item(gff3_container, rna_ID, NCToChr, rnaIDTotransI
         
         except:
             if verbose:
-                print >>sys.stderr, 'Skip this transcript: ',rna_ID
-                print >>sys.stderr, 'exonString:',exonString
-                print >>sys.stderr, 'cdsString:',cdsString
-                print >>sys.stderr, 'strand:',Strand
-                print >>sys.stderr, '\n'
+                sys.stderr.writelines('Skip this transcript: '+rna_ID+"\n")
+                sys.stderr.writelines('exonString: '+exonString+"\n")
+                sys.stderr.writelines('cdsString: '+cdsString+"\n")
+                sys.stderr.writelines('strand: '+Strand+"\n")
+                sys.stderr.writelines('\n\n')
             return None
         
         utr_5_string = ','.join(["%s-%s"%(it[0], it[1]) for it in utr_5_list])
@@ -541,7 +551,7 @@ def norm_utr(exon_str, utr_str, strand):
                     utr_tuple.append( ( norm_tuple[i][0], norm_tuple[i][0]+aarr[1]-aarr[0] ) ); flag = True; break
                 elif raw_tuple[i][0] < aarr[0] <= aarr[1] == raw_tuple[i][1]:
                     utr_tuple.append( ( norm_tuple[i][1]-(aarr[1]-aarr[0]), norm_tuple[i][1] ) ); flag = True; break
-        if not flag: print 'Unexpected Result'
+        if not flag: print('Unexpected Result')
     return norm_tuple, utr_tuple
 
 def genomeCoorBed_To_transCoorBed(genomeCoorFileName, transCoorFileName):
@@ -558,7 +568,7 @@ def genomeCoorBed_To_transCoorBed(genomeCoorFileName, transCoorFileName):
             utrList = norm_utr(arr[7], arr[8], arr[3])[1]
             utrString = ','.join([str(item[0])+'-'+str(item[1]) for item in utrList])
             transCoorString += '\t'+utrString
-        print >>OUT, transCoorString
+        OUT.writelines( transCoorString+"\n" )
         line = IN.readline()
     OUT.close()
 

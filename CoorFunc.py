@@ -29,6 +29,8 @@
 
 """
 
+import sys
+
 class out_of_range(Exception):
     def __init__(self, message=""):
         super(out_of_range, self).__init__(message)
@@ -81,7 +83,7 @@ def genomeRange2TransCoor(TransBin, Parser, Chr, Start, End, Strand, bw=100000):
     overlapRegions = []
     checkedTrans = []
     while idxBin <= int(End/bw):
-        if idxBin > TransBin[Chr][Strand].keys()[-1]:
+        if idxBin > list(TransBin[Chr][Strand].keys())[-1]:
             break
         for trans_id in TransBin[Chr][Strand][idxBin]:
             if trans_id not in checkedTrans:
@@ -160,7 +162,7 @@ def transCoor2genomeCoor(Parser, TransID, Pos):
             else:
                 return [ RNA['chr'], exon_list[i][1]-(Pos-accu-1), Strand ]
         accu += range_of_tuple
-    print 'Warning: ', TransID, Pos, 'can\'t find genome Coordinate'
+    sys.stderr.writelines("Warning: %s %s cannot be found genome Coordinate\n" % (TransID, Pos))
     return [False, False, False]
 
 
@@ -218,7 +220,7 @@ def genomeRange2geneCoor(GeneBin, Parser, Chr, Start, End, Strand, bw=100000):
     checkedGenes = []
     geneParser = Parser.getGeneParser(showAttr=False)
     while idxBin <= int(End/bw):
-        if idxBin > GeneBin[Chr][Strand].keys()[-1]:
+        if idxBin > list(GeneBin[Chr][Strand].keys())[-1]:
             break
         for geneID in GeneBin[Chr][Strand][idxBin]:
             if geneID not in checkedGenes:

@@ -38,13 +38,13 @@ def initGTF(AnnotationGTF, source, genomeFile='', showAttr=True, rem_tVersion=Fa
         handle = GTFParserFunc.read_ncbi_gff3(AnnotationGTF, rem_scaffold=rem_scaffold, raw_chrID=raw_chrID)
         Parser = __build_parser(handle, genomeFn=genomeFile, source=source, showAttr=showAttr, rem_tVersion=rem_tVersion, rem_gVersion=rem_gVersion, verbose=verbose)
     else:
-        print >>sys.stderr, "Error: source must be Gencode or NCBI"
+        sys.stderr.writelines("Error: source must be Gencode or NCBI\n")
     
     return Parser
 
 
 def __build_parser(GenomeHandler, genomeFn='', source='Gencode', showAttr=True, rem_tVersion=False, rem_gVersion=False, verbose=False):
-    import random, os, commands, ParseTrans
+    import random, os, ParseTrans
     import GTFParserFunc
     
     rID = random.randint(10000, 99999)
@@ -55,7 +55,7 @@ def __build_parser(GenomeHandler, genomeFn='', source='Gencode', showAttr=True, 
     elif source == 'NCBI':
         GTFParserFunc.write_gff3_genomeCoor_bed(GenomeHandler, tmp_genomeCoor_file, raw_chrID=raw_chrID)
     else:
-        print >>sys.stderr, "Error!"
+        sys.stderr.writelines("Error!\n")
         return None
     
     tmp_transcriptome_file = ""
